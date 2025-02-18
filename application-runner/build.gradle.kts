@@ -37,3 +37,23 @@ kotlin {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+
+tasks.register<Copy>("copyPreCommitHook") {
+	group = "git hooks"
+	description = "Copy pre-commit hook from the scripts/hooks to .git/hooks directory"
+	outputs.upToDateWhen { false }
+	from(file("scripts/hooks/pre-commit"))
+	into(file(".git/hooks"))
+}
+
+tasks.register<Copy>("copyPrePushHook") {
+	group = "git hooks"
+	description = "Copy pre-push hook from the scripts/hooks to .git/hooks directory"
+	outputs.upToDateWhen { false }
+	from(file("scripts/hooks/pre-push"))
+	into(file(".git/hooks"))
+}
+
+tasks.build {
+	dependsOn("copyPreCommitHook", "copyPrePushHook")
+}

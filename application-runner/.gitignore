@@ -38,3 +38,8 @@ out/
 
 ### Kotlin ###
 .kotlin
+
+### Application Files ###
+.env
+.env.*
+!.env.example

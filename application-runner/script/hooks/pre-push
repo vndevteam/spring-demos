@@ -1,0 +1,12 @@
+#!/bin/sh
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+changed_files=$(git diff --name-only HEAD HEAD~ -- '*.java' '*.kt')
+if [ -n "$changed_files" ]; then
+  echo "${BLUE}Running tests due to changes in the following Java/Kt files:${NC}"
+  echo "$changed_files"
+  ./gradlew test
+else
+  echo "${GREEN}No Java/Kt files have been changed. Skipping tests.${NC}"
+fi
