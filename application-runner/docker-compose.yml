@@ -1,0 +1,44 @@
+services:
+  application_runner:
+    image: application-runner:${APP_VERSION}
+    container_name: application-runner
+    restart: no
+    env_file:
+      - .env
+    command: ["--task_name=$TASK_NAME"]
+
+  dozzle:
+    image: amir20/dozzle:latest
+    environment:
+      - DOZZLE_AUTH_PROVIDER=simple
+    secrets:
+      - source: users
+        target: /data/users.yml
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - dozzle:/data
+    ports:
+      - 8080:8080
+
+  postgres_db:
+    image: postgres:latest
+    container_name: postgres_db
+    restart: always
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_NAME}
+      - TZ=Asia/Ho_Chi_Minh
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data
+
+secrets:
+  users:
+    file: script/dozzle/users.yml
+
+volumes:
+  postgres_volume:
+  redis_volume:
+  dozzle:
